@@ -20,11 +20,23 @@ let configB = {
     dstHost: '172.31.27.166',
     dstPort: 1433,
     localHost: '127.0.0.1',
-    localPort: 8080,
+    localPort: 8081,
     keepAlive: true
 };
 
-let serverA = tunnel(configA, function (error, serverA) {
+let configC = {
+    username: 'ec2-user',
+    privateKey: fs.readFileSync('C:\\Users\\rivinduw\\Downloads\\TestKeyPair.pem'),
+    host: '52.59.171.111',
+    port: 22,
+    dstHost: '52.57.190.231',
+    dstPort: null,
+    localHost: '127.0.0.1',
+    localPort: 8082,
+    keepAlive: true
+};
+
+let serverA = tunnel(configA, function (error, server) {
     console.log("Is listening ", serverA.listening);
     /*serverA.on('connect', function () {
         console.error('serverA is connected');
@@ -37,13 +49,33 @@ let serverA = tunnel(configA, function (error, serverA) {
     if (error) {
         console.log('Something bad happened:', error);
     }*/
-    let server = tunnel(configB, function (error, server) {
-        console.log("Is listening ", server.listening);
-        server.on('connect', function () {
+    let serverB = tunnel(configB, function (error, serverB) {
+        console.log("Is listening ", serverB.listening);
+        serverB.on('connect', function () {
             console.error('Server is connected');
         });
     
-        server.on('ready', function () {
+        serverB.on('ready', function () {
+            console.error('Server is ready');
+        })
+    
+        if (error) {
+            console.log('Something bad happened:', error);
+        }
+        
+    });
+    
+    serverB.on('error', function (err) {
+        console.error('Something bad happened:', err);
+    });
+
+    let serverC = tunnel(configC, function (error, serverC) {
+        console.log("Is listening ", serverC.listening);
+        serverC.on('connect', function () {
+            console.error('Server is connected');
+        });
+    
+        serverC.on('ready', function () {
             console.error('Server is ready');
         })
     
@@ -52,14 +84,14 @@ let serverA = tunnel(configA, function (error, serverA) {
         }
     });
     
-    server.on('error', function (err) {
+    serverC.on('error', function (err) {
         console.error('Something bad happened:', err);
     });
+    
 });
 
 // Use a listener to handle errors outside the callback
 serverA.on('error', function (err) {
     console.error('Something bad happened:', err);
 });
-
 
