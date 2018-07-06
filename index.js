@@ -30,7 +30,7 @@ let configC = {
     host: '52.59.171.111',
     port: 22,
     dstHost: '52.57.190.231',
-    dstPort: null,
+    dstPort: 80,
     localHost: '127.0.0.1',
     localPort: 8082,
     keepAlive: true
