@@ -1,3 +1,7 @@
+const fs = require('fs');
+const tunnel = require('tunnel-ssh');
+
+
 var configData = [
     {username: 'ec2-user',
     privateKey: fs.readFileSync('C:\\Users\\rivinduw\\Downloads\\TestKeyPair.pem'),
@@ -30,19 +34,6 @@ var configData = [
     keepAlive: true}
 ];
 
-let ServerConfig = {
-   publicServer:[]
-};
 
-configData.map(function(item){
-    ServerConfig.publicServer.push({
-        "privateKey" : item.privateKey,
-        "host" : item.host,
-        "port" : item.port,
-        "dstHost" : item.dstHost,
-        "dstPort" : item.dstPort,
-        "localHost" : item.localHost,
-        "localPort" : item.localPort,
-        "keepAlive" : item.age
-    });
-});
+
+module.exports = configData;
